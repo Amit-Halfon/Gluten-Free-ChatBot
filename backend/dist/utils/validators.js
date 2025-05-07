@@ -14,16 +14,19 @@ export const validate = (validations) => {
         return res.status(422).json({ errors: errors.array() });
     };
 };
-export const signupValidator = [
-    body("name").notEmpty().withMessage("Name is required"),
-    body("name").isAlpha().withMessage("Name must be alphabetic"),
-    body("lastName").notEmpty().withMessage("Last name is required"),
-    body("lastName").isAlpha().withMessage("Last name must be alphabetic"),
+export const loginValidator = [
     body("email").notEmpty().withMessage("Email is required"),
     body("email").isEmail().withMessage("Email is not valid"),
     body("password").notEmpty().withMessage("Password is required"),
     body("password")
         .isLength({ min: 8 })
         .withMessage("Password must be at least 8 characters long"),
+];
+export const signupValidator = [
+    body("name").notEmpty().withMessage("Name is required"),
+    body("name").isAlpha().withMessage("Name must be alphabetic"),
+    body("lastName").notEmpty().withMessage("Last name is required"),
+    body("lastName").isAlpha().withMessage("Last name must be alphabetic"),
+    ...loginValidator,
 ];
 //# sourceMappingURL=validators.js.map
