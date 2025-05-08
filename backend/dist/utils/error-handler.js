@@ -9,5 +9,7 @@ export default function errorHandler(error, req, res, next) {
         });
         return;
     }
+    // Handle other errors
+    res.status(500).json({ message: "Internal Server Error" });
 }
 //# sourceMappingURL=error-handler.js.map

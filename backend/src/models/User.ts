@@ -14,7 +14,10 @@ const chatSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  time: { type: Date, default: Date.now },
+  time: {
+    type: Date,
+    default: Date.now,
+  },
 });
 const userSchema = new mongoose.Schema({
   name: {
