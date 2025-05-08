@@ -4,8 +4,29 @@
 html,body{
   margin:0;
   padding: 0;
-  background: #7EC18E;
-  color: white;
+  background:#e8fff1 ;
+  color: #0b321a;
   font-family: 'Roboto Slab', serif;
 
 }
+
+.nav-link{
+  font-weight:600;
+  text-transform: uppercase ;
+  margin-right: 10px ;
+  margin-left: 10px;
+  padding: 8px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.nav-link:hover{
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+.MuiOutlinedInput-input-root.Mui-focused,
+.MuiOutlinedInput-notchedOutline {
+  border-color: #0b321a !important;
+}
+

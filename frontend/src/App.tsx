@@ -5,9 +5,10 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Chat from './pages/Chat'
 import NotFound from './pages/NotFound'
+import { useAuth } from './context/AuthContext'
 
 function App() {
-  return <main>
+  return( <main>
     <Header/>
     <Routes>
       <Route path="/" element={<Home/>}/>
@@ -17,6 +18,7 @@ function App() {
       <Route path="*" element={<NotFound/>}/>
     </Routes>
   </main>
+  );
 }
 
 export default App
