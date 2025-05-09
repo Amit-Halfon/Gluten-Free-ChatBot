@@ -33,3 +33,7 @@ export const signupValidator = [
   body("lastName").isAlpha().withMessage("Last name must be alphabetic"),
   ...loginValidator,
 ];
+
+export const chatCompletionValidator = [
+  body("message").notEmpty().withMessage("Message is required"),
+];

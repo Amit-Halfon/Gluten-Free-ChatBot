@@ -1,19 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;600;800&display=swap");
 
-
-html,body{
-  margin:0;
+html,
+body {
+  margin: 0;
   padding: 0;
-  background:#e8fff1 ;
+  background: #e8fff1;
   color: #0b321a;
-  font-family: 'Roboto Slab', serif;
-
+  font-family: "Roboto Slab", serif;
 }
 
-.nav-link{
-  font-weight:600;
-  text-transform: uppercase ;
-  margin-right: 10px ;
+.nav-link {
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-right: 10px;
   margin-left: 10px;
   padding: 8px 20px;
   border-radius: 10px;
@@ -21,7 +20,7 @@ html,body{
   letter-spacing: 1px;
 }
 
-.nav-link:hover{
+.nav-link:hover {
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
   transform: translateY(-5px);
 }
@@ -30,3 +29,55 @@ html,body{
   border-color: #0b321a !important;
 }
 
+.chatbot-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 65%;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chatbot-header {
+  background-color: #7ec18e;
+  color: white;
+  padding: 4px 16px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  font-size: 18px;
+}
+
+.chatbot-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.message {
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  max-width: 85%;
+}
+
+.message.user {
+  background-color: #7ec18e;
+  color: white;
+  align-self: flex-end;
+}
+
+.message.bot {
+  background-color: #e8fff1;
+  color: #0b321a;
+  align-self: flex-start;
+}
