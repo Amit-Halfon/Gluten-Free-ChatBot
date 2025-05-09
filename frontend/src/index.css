@@ -77,7 +77,29 @@ body {
 }
 
 .message.bot {
-  background-color: #e8fff1;
+  background-color: white;
   color: #0b321a;
   align-self: flex-start;
+}
+
+.chatbot-input-container {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #0b321a;
+  background-color: white;
+  flex-shrink: 0;
+  width: 100%;
+  border-radius: inherit;
+  box-sizing: border-box;
+}
+
+.chatbot-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #0b321a;
+  border-radius: 10px;
+  background-color: white;
+  color: #0b321a;
+  font-size: 16px;
+  box-sizing: border-box;
 }
