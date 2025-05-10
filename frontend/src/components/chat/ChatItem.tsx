@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
+import ReactMarkdown from "react-markdown";
 
 const ChatItem = ({
   content,
@@ -10,9 +11,21 @@ const ChatItem = ({
 }) => {
   return role === "assistant" ? (
     <Box className={`message bot`}>
-      <Typography color="inherit" fontSize={"20px"}>
+      <ReactMarkdown
+        components={{
+          p: ({ node, ...props }) => (
+            <Typography component="p" sx={{ color: "#0b321a" }} {...props} />
+          ),
+          li: ({ node, ...props }) => (
+            <li
+              style={{ marginBottom: "0.5em", color: "#0b321a" }}
+              {...props}
+            />
+          ),
+        }}
+      >
         {content}
-      </Typography>
+      </ReactMarkdown>
     </Box>
   ) : (
     <Box className={`message user`}>

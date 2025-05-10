@@ -1,32 +1,25 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Avatar, Box, Button, IconButton, Typography } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import { red } from "@mui/material/colors";
 import ChatItem from "../components/chat/ChatItem";
 import { IoMdSend } from "react-icons/io";
-
-const chatMessages = [
-  {
-    role: "user",
-    content: "Hi there! Can you tell me a joke?",
-  },
-  {
-    role: "assistant",
-    content:
-      "Sure! Why did the scarecrow win an award? Because he was outstanding in his field!",
-  },
-  {
-    role: "user",
-    content: "Haha, that’s great. Now, what’s the capital of Japan?",
-  },
-  {
-    role: "assistant",
-    content: "The capital of Japan is Tokyo.",
-  },
-];
+import {
+  deleteUserChats,
+  getUserChats,
+  sendChatRequest,
+} from "../helpers/api-communicator";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+type Message = {
+  role: "user" | "assistant" | "system";
+  content: string;
+};
 
 const Chat = () => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const auth = useAuth();
+  const navigate = useNavigate();
   const fullName = auth?.user?.name || "";
 
   // pick sizes by length (tweak thresholds to your taste)
@@ -38,6 +31,53 @@ const Chat = () => {
       : fullName.length <= 12
       ? "0.875rem"
       : "0.75rem";
+
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const handleSubmit = async () => {
+    const content = inputRef.current?.value as string;
+    if (inputRef && inputRef.current) {
+      inputRef.current.value = "";
+    }
+    const newMessage: Message = { role: "user", content };
+    setChatMessages((prev) => [...prev, newMessage]);
+    const chatData = await sendChatRequest(content);
+    setChatMessages([...chatData.chats]);
+    //
+  };
+
+  const handleDeleteChats = async () => {
+    try {
+      toast.loading("Deleting Chats", { id: "deletechats" });
+      await deleteUserChats();
+      setChatMessages([]);
+      toast.success("Successfully deleted chats", { id: "deletechats" });
+    } catch (error) {
+      console.log(error);
+      toast.error("Deleting Failed", { id: "deletechats" });
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (auth?.isLoggedIn && auth.user) {
+      toast.loading("Loading Chats", { id: "loadchats" });
+      getUserChats()
+        .then((data) => {
+          setChatMessages([...data.chats]);
+          toast.success("Successfully loaded chats", { id: "loadchats" });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Loading Failed", { id: "loadchats" });
+        });
+    }
+  }, [auth]);
+
+  useEffect(() => {
+    if (!auth?.user) {
+      navigate("/login");
+      return;
+    }
+  }, [auth]);
   return (
     <Box
       sx={{
@@ -65,23 +105,53 @@ const Chat = () => {
             borderRadius: 5,
             flexDirection: "column",
             mx: 3,
+            boxShadow:
+              "8px 8px 16px rgba(0,0,0,0.15), -8px -8px 16px rgba(255,255,255,0.6)",
+            transform: "perspective(600px) rotateX(3deg)",
+            transition: "transform 0.3s ease",
+            "&:hover": {
+              transform: "perspective(600px) rotateX(0deg)",
+            },
           }}
         >
           <Avatar
             sx={{
               mx: "auto",
               my: 2,
-              bgcolor: "white",
-              color: "black",
+              width: 64,
+              height: 64,
+              fontSize,
+              textAlign: "center",
+              lineHeight: 1.1,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              bgcolor: "#e8fff1",
+              color: "#0b321a",
               fontWeight: 700,
             }}
           >
-            {auth?.user?.name[0]}
+            <img
+              src="gluten_free_icon2.png" // Replace with the correct path
+              alt="Gluten-Free Icon"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
           </Avatar>
           <Typography
-            sx={{ mx: "auto", fontFamily: "work sans", color: "#0b321a" }}
+            sx={{
+              mx: "auto",
+              fontFamily: "work sans",
+              color: "#0b321a",
+              fontSize: "1.2rem",
+              fontWeight: 700,
+              textAlign: "center",
+            }}
           >
-            You are talking to a ChatBOT
+            Welcome To The Gluten Free ChatBOT
           </Typography>
           <Typography
             sx={{
@@ -90,10 +160,12 @@ const Chat = () => {
               my: 4,
               p: 3,
               color: "#0b321a",
+              fontSize: "1.2rem",
             }}
           >
-            You can ask some questions related to Knowledge, Business, Advices,
-            Education, etc. But avoid sharing personal information
+            Feel free to ask any questions related to gluten-free diets,
+            recipes, or lifestyle tips. I'm here to help you navigate your
+            gluten-free lifestyle.
           </Typography>
         </Box>
       </Box>
@@ -102,7 +174,9 @@ const Chat = () => {
           display: "flex",
           flex: { md: 0.8, xs: 1, sm: 1 },
           flexDirection: "column",
-          px: 3,
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          borderRadius: 3,
+          mx: 3,
         }}
       >
         <header className="chatbot-header">
@@ -127,7 +201,7 @@ const Chat = () => {
             {auth?.user?.name}
           </Avatar>
           <Button
-            // onClick={handleDeleteChats}
+            onClick={handleDeleteChats}
             sx={{
               width: "200px",
               color: "white",
@@ -157,6 +231,9 @@ const Chat = () => {
             overflowY: "auto",
             scrollBehavior: "smooth",
             marginTop: 3,
+            px: 2, // theme.spacing(2) == 16px
+            py: 1, // optional vertical breathing room
+            boxSizing: "border-box",
           }}
         >
           {chatMessages.map((chat, index) => (
@@ -175,7 +252,7 @@ const Chat = () => {
         >
           {" "}
           <input
-            // ref={inputRef}
+            ref={inputRef}
             type="text"
             style={{
               width: "100%",
@@ -187,10 +264,7 @@ const Chat = () => {
               fontSize: "20px",
             }}
           />
-          <IconButton
-            //onClick={handleSubmit}
-            sx={{ color: "white", mx: 1 }}
-          >
+          <IconButton onClick={handleSubmit} sx={{ color: "white", mx: 1 }}>
             <IoMdSend />
           </IconButton>
         </div>
