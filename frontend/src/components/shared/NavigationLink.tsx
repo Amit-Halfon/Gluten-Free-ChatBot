@@ -1,7 +1,7 @@
+import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
 type Props = {
-  to: string;
   bg: string;
   text: string;
   textColor: string;
@@ -10,14 +10,21 @@ type Props = {
 
 const NavigationLink = (props: Props) => {
   return (
-    <Link
+    // <Link
+    //   onClick={props.onClick}
+    //   className="nav-link"
+    //   to={props.to}
+    //   style={{ background: props.bg, color: props.textColor }}
+    // >
+    //   {props.text}
+    // </Link>
+    <Button
       onClick={props.onClick}
       className="nav-link"
-      to={props.to}
       style={{ background: props.bg, color: props.textColor }}
     >
       {props.text}
-    </Link>
+    </Button>
   );
 };
 

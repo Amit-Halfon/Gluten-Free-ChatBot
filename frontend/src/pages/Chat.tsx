@@ -1,6 +1,5 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Avatar, Box, Button, IconButton, Typography } from "@mui/material";
-import { useAuth } from "../context/AuthContext";
 import { red } from "@mui/material/colors";
 import ChatItem from "../components/chat/ChatItem";
 import { IoMdSend } from "react-icons/io";
@@ -10,7 +9,7 @@ import {
   sendChatRequest,
 } from "../helpers/api-communicator";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 type Message = {
   role: "user" | "assistant" | "system";
   content: string;
@@ -18,9 +17,9 @@ type Message = {
 
 const Chat = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const auth = useAuth();
-  const navigate = useNavigate();
-  const fullName = auth?.user?.name || "";
+  // const auth = useAuth();
+  const { user, getAccessTokenSilently } = useAuth0();
+  const fullName = user?.given_name || "";
 
   // pick sizes by length (tweak thresholds to your taste)
   const fontSize =
@@ -40,7 +39,8 @@ const Chat = () => {
     }
     const newMessage: Message = { role: "user", content };
     setChatMessages((prev) => [...prev, newMessage]);
-    const chatData = await sendChatRequest(content);
+    const token = await getAccessTokenSilently();
+    const chatData = await sendChatRequest(content, token);
     setChatMessages([...chatData.chats]);
     //
   };
@@ -48,7 +48,8 @@ const Chat = () => {
   const handleDeleteChats = async () => {
     try {
       toast.loading("Deleting Chats", { id: "deletechats" });
-      await deleteUserChats();
+      const token = await getAccessTokenSilently();
+      await deleteUserChats(token);
       setChatMessages([]);
       toast.success("Successfully deleted chats", { id: "deletechats" });
     } catch (error) {
@@ -58,26 +59,22 @@ const Chat = () => {
   };
 
   useLayoutEffect(() => {
-    if (auth?.isLoggedIn && auth.user) {
+    if (user) {
       toast.loading("Loading Chats", { id: "loadchats" });
-      getUserChats()
-        .then((data) => {
-          setChatMessages([...data.chats]);
-          toast.success("Successfully loaded chats", { id: "loadchats" });
-        })
-        .catch((err) => {
-          console.log(err);
-          toast.error("Loading Failed", { id: "loadchats" });
-        });
+      getAccessTokenSilently().then((token) => {
+        getUserChats(token)
+          .then((data) => {
+            setChatMessages([...data.chats]);
+            toast.success("Successfully loaded chats", { id: "loadchats" });
+          })
+          .catch((err) => {
+            console.log(err);
+            toast.error("Loading Failed", { id: "loadchats" });
+          });
+      });
     }
-  }, [auth]);
+  }, [user]);
 
-  useEffect(() => {
-    if (!auth?.user) {
-      navigate("/login");
-      return;
-    }
-  }, [auth]);
   return (
     <Box
       sx={{
@@ -161,6 +158,9 @@ const Chat = () => {
               p: 3,
               color: "#0b321a",
               fontSize: "1.2rem",
+              maxWidth: "90%", // Adjust to fit content
+              boxSizing: "border-box",
+              overflowWrap: "break-word",
             }}
           >
             Feel free to ask any questions related to gluten-free diets,
@@ -198,7 +198,7 @@ const Chat = () => {
             }}
           >
             {" "}
-            {auth?.user?.name}
+            {user?.given_name}
           </Avatar>
           <Button
             onClick={handleDeleteChats}

@@ -10,7 +10,7 @@ export const generateChatComplition = async (
 ) => {
   const { message } = req.body;
   try {
-    const user = await User.findById(res.locals.jwtData.id);
+    const user = await User.findOne({ email: req.auth.payload.email });
     if (!user)
       return res
         .status(401)
@@ -52,11 +52,11 @@ export const sendChatsToUser = async (
 ) => {
   try {
     //user token check
-    const user = await User.findById(res.locals.jwtData.id);
+    const user = await User.findOne({ email: req.auth.payload.email });
     if (!user) {
       return res.status(401).send("User not registered Or Token Malfunction");
     }
-    if (user._id.toString() !== res.locals.jwtData.id) {
+    if (user.email.toString() !== req.auth.payload.email) {
       return res.status(401).send("Permissons didn't match");
     }
 
@@ -74,12 +74,9 @@ export const deleteChats = async (
 ) => {
   try {
     //user token check
-    const user = await User.findById(res.locals.jwtData.id);
+    const user = await User.findOne({ email: req.auth.payload.email });
     if (!user) {
       return res.status(401).send("User not registered Or Token Malfunction");
-    }
-    if (user._id.toString() !== res.locals.jwtData.id) {
-      return res.status(401).send("Permissons didn't match");
     }
     //@ts-ignore
     user.chats = [];

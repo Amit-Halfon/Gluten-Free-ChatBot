@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { verifyToken } from "../utils/token-manager.js";
-import { chatCompletionValidator, validate } from "../utils/validators.js";
+import { checkJwt } from "../utils/token-manager.js";
 import {
   deleteChats,
   generateChatComplition,
@@ -9,14 +8,9 @@ import {
 
 //protected API
 const chatRoutes = Router();
-chatRoutes.post(
-  "/new",
-  validate(chatCompletionValidator),
-  verifyToken,
-  generateChatComplition
-);
+chatRoutes.post("/new", checkJwt, generateChatComplition);
 
-chatRoutes.get("/all-chats", verifyToken, sendChatsToUser);
-chatRoutes.delete("/delete", verifyToken, deleteChats);
+chatRoutes.get("/all-chats", checkJwt, sendChatsToUser);
+chatRoutes.delete("/delete", checkJwt, deleteChats);
 
 export default chatRoutes;

@@ -5,6 +5,7 @@ import morgan from "morgan";
 import appRouter from "./routes/index.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+
 const app = express();
 
 // Middleware

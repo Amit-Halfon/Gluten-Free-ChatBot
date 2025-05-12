@@ -9,23 +9,18 @@ export const loginUser = async (email: string, password: string) => {
   return data;
 };
 
-export const signupUser = async (
-  email: string,
-  password: string,
-  name: string,
-  lastName: string
-) => {
-  const res = await axios.post("/user/signup", {
-    email,
-    password,
-    name,
-    lastName,
-  });
-  if (res.status !== 201) {
+export const signupUser = async (token: string) => {
+  try {
+    const res = await axios.post("/user/signup", null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
     throw new Error("Unable to signup");
   }
-  const data = await res.data;
-  return data;
 };
 
 export const checkAuthStatus = async () => {
@@ -37,8 +32,16 @@ export const checkAuthStatus = async () => {
   return data;
 };
 
-export const sendChatRequest = async (message: string) => {
-  const res = await axios.post("/chat/new", { message });
+export const sendChatRequest = async (message: string, token: string) => {
+  const res = await axios.post(
+    "/chat/new",
+    { message },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   if (res.status !== 200) {
     throw new Error("Unable to send chat");
   }
@@ -46,17 +49,25 @@ export const sendChatRequest = async (message: string) => {
   return data;
 };
 
-export const getUserChats = async () => {
-  const res = await axios.get("/chat/all-chats");
+export const getUserChats = async (token: string) => {
+  const res = await axios.get("/chat/all-chats", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   if (res.status !== 200) {
-    throw new Error("Unable to send chat");
+    throw new Error("Unable to load chat");
   }
   const data = await res.data;
   return data;
 };
 
-export const deleteUserChats = async () => {
-  const res = await axios.delete("/chat/delete");
+export const deleteUserChats = async (token: string) => {
+  const res = await axios.delete("/chat/delete", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   if (res.status !== 200) {
     throw new Error("Unable to delete chat");
   }
