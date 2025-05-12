@@ -97,7 +97,7 @@ const Chat = () => {
           sx={{
             display: "flex",
             width: "100%",
-            height: "60vh",
+            height: "auto",
             bgcolor: "#7ec18e",
             borderRadius: 5,
             flexDirection: "column",
@@ -154,13 +154,15 @@ const Chat = () => {
             sx={{
               mx: "auto",
               fontFamily: "work sans",
-              my: 4,
-              p: 3,
+              my: { xs: 1, sm: 2, md: 4 }, // Adjust margins for different screen sizes
+              px: { xs: 2, sm: 3 },
+              py: { xs: 1, sm: 2 },
               color: "#0b321a",
-              fontSize: "1.2rem",
-              maxWidth: "90%", // Adjust to fit content
+              fontSize: { xs: "0.9rem", sm: "1rem", md: "1.2rem" }, // Adjust font size
+              maxWidth: "90%",
               boxSizing: "border-box",
               overflowWrap: "break-word",
+              wordBreak: "break-word",
             }}
           >
             Feel free to ask any questions related to gluten-free diets,
@@ -263,6 +265,13 @@ const Chat = () => {
               color: "white",
               fontSize: "20px",
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
+            placeholder="Type your message here..."
           />
           <IconButton onClick={handleSubmit} sx={{ color: "white", mx: 1 }}>
             <IoMdSend />

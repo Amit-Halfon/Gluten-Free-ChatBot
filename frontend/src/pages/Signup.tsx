@@ -30,7 +30,13 @@ const Signup = () => {
   }, [isAuthenticated]);
 
   return (
-    <Box width={"100%"} height={"100%"} display="flex" flex={1}>
+    <Box
+      width="100vw"
+      height="100vh"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
       <CircularProgress size={50} />
     </Box>
   );

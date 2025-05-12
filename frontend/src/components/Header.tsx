@@ -23,10 +23,9 @@ const Header = () => {
               <NavigationLink
                 onClick={() => loginWithRedirect()}
                 bg="#2E8B57"
-                text="Log in"
+                text="Log in or Sign Up"
                 textColor="black"
               />
-              <NavigationLink bg="#2E8B57" textColor="white" text="Sign Up" />
             </>
           )}
         </div>
