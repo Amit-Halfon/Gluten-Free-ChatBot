@@ -7,8 +7,8 @@ Built with React (frontend) and a Node/Express API (backend). Auth is provided i
 
 ## Monorepo layout
 
-frontend/ # React + Vite + TypeScript + MUI (Header, Logo, NavigationLink, Chat pages)
-backend/ # Node + Express + TypeScript (controllers, routes, token utils, validators)
+- frontend/ # React + Vite + TypeScript + MUI (Header, Logo, NavigationLink, Chat pages)
+- backend/ # Node + Express + TypeScript (controllers, routes, token utils, validators)
 
 ## Features
 - Secure login (Auth0 version) with redirect-based flow and protected routes.
